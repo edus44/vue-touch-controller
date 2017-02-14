@@ -10,8 +10,8 @@ function tapFactory(mouse,touch){
             //Shims touch event pageX/Y
             if (isTouch){
                 fn = (e)=>{
-                    e.pageX = e.touches.length ? e.touches[0].pageX : 0
-                    e.pageY = e.touches.length ? e.touches[0].pageY : 0
+                    e.pageX = e.targetTouches.length ? e.targetTouches[e.targetTouches.length-1].pageX : 0
+                    e.pageY = e.targetTouches.length ? e.targetTouches[e.targetTouches.length-1].pageY : 0
                     value(e)
                 }
             }

@@ -1,6 +1,6 @@
 <template>
     <svg
-        id="touch-controller"
+        class="touch-control-move"
         v-tapstart="setCenter"
         v-tapmove="moveStick"
         v-tapend="resetCenter"
@@ -8,15 +8,15 @@
         
         <g :transform="translateCenter">
             <circle 
-                class="touch-controller-stick-center"
+                class="touch-control-move-stick-center"
                 :r="this.size*0.17" 
             />
             <circle 
-                class="touch-controller-stick-limits"
+                class="touch-control-move-stick-limits"
                 :r="this.size" 
             />
             <circle 
-                class="touch-controller-stick-handler"
+                class="touch-control-move-stick-handler"
                 :r="this.size*.3" 
                 :cx="stick.x" 
                 :cy="stick.y" 
@@ -33,7 +33,7 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            size:100,
+            size:80,
             center:{x:0,y:0},
             stick:{x:0,y:0},
             bounds:null,
@@ -128,23 +128,23 @@ function calcStickPos(coords,center,size){
 
 </script>
 
-<style scoped>
-#touch-controller{
-    background-color: #eee;
+<style>
+.touch-control-move{
+    background-color:rgba(50, 115, 220, 0.1);
     width: 100%;
     height: 100%;
     display: block;
 }
 
-.touch-controller-stick-center{
+.touch-control-move-stick-center{
     fill:#3273dc; 
 }
-.touch-controller-stick-limits{
+.touch-control-move-stick-limits{
     fill:rgba(50, 115, 220, 0.3);
     stroke:#3273dc;
     stroke-width:3;
 }
-.touch-controller-stick-handler{
+.touch-control-move-stick-handler{
     fill:rgba(0,0,0,.6);
 }
 </style>

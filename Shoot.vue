@@ -1,6 +1,6 @@
 <template>
     <svg
-        id="touch-controller"
+        class="touch-control-shot"
         v-tapstart="setCenter"
         v-tapmove="moveStick"
         v-tapend="resetCenter"
@@ -14,12 +14,12 @@
             clip-path="url(#frontier)"
         >
             <circle 
-                class="touch-controller-stick-limits"
+                class="touch-control-shot-stick-limits"
                 v-for="n in steps"
                 :r="size * n" 
             />
             <line 
-                class="touch-controller-stick-line"
+                class="touch-control-shot-stick-line"
                 v-for="line in lines"
                 :x1="line.x1" 
                 :y1="line.y1" 
@@ -27,14 +27,14 @@
                 :y2="line.y2"
             />
             <line 
-                class="touch-controller-stick-fire"
+                class="touch-control-shot-stick-fire"
                 v-show="holding"
                 :x2="fire.x" 
                 :y2="fire.y"
             />
 
             <circle 
-                class="touch-controller-stick-handler"
+                class="touch-control-shot-stick-handler"
                 :r="size*.3" 
                 :cx="stick.x" 
                 :cy="stick.y" 
@@ -166,31 +166,38 @@ function calcStickPos(coords,center,size){
 
 </script>
 
-<style scoped>
-#touch-controller{
-    background-color: #eee;
+<style>
+.touch-control-shot{
+    background-color: rgba(207, 33, 33,.1);
     width: 100%;
     height: 100%;
     display: block;
 }
 
-.touch-controller-stick-center{
-    fill:rgba(207, 33, 33, 1);
+.touch-control-shot-stick-center{
+    fill:rgb(207, 33, 33);
 }
-.touch-controller-stick-limits{
+.touch-control-shot-stick-limits{
     fill:none;
-    stroke:rgba(207, 33, 33, 1);
+    stroke:rgb(207, 33, 33);
     stroke-width:2;
 }
-.touch-controller-stick-line{
-    stroke:rgba(207, 33, 33, 1);
+.touch-control-shot-stick-line{
+    stroke:rgb(207, 33, 33);
     stroke-width:2;
 }
-.touch-controller-stick-fire{
+.touch-control-shot-stick-fire{
     stroke:rgb(255, 166, 8);
-    stroke-width:4;
+    stroke-width:3;
+    stroke-dasharray: 10, 5;
+    animation: dash .2s linear infinite;
 }
-.touch-controller-stick-handler{
+.touch-control-shot-stick-handler{
     fill:rgba(0,0,0,.6);
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: -15;
+  }
 }
 </style>

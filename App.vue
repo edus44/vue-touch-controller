@@ -1,15 +1,15 @@
 <template>
     <div id="box">
-        {{ pos.x }}<br>
-        {{ pos.y }}<br>
+        <Fullscreen/>
+        <Move @update="updatePos"/>
         <Shoot @update="updatePos"/>
-        <Circle2 @update="updatePos"/>
     </div>
 </template>
 
 <script>
 import Shoot from 'Shoot'
-import Circle from 'Circle'
+import Move from 'Move'
+import Fullscreen from 'Fullscreen'
 
 export default {
     data(){
@@ -22,7 +22,7 @@ export default {
             this.pos = pos
         }
     },
-    components: {Shoot,Circle2:Circle}
+    components: {Shoot,Move,Fullscreen}
 }
 </script>
 
@@ -32,16 +32,16 @@ html,body{
     margin: 0;
     padding: 0;
     min-height: 100%;
+    overflow: hidden;
+    background-color: #fff;
 }
 body{
+    cursor: default;
     display: flex;
-    /*align-items:center;*/
-    /*justify-content: center;*/
 }
 #box{
-    box-shadow:0 0 10px rgba(0,0,0,.1);
-    /*flex:1;*/
-    width: 400px;
-    height: 400px;
+    flex:1;
+    display: flex;
 }
+
 </style>
