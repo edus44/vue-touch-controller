@@ -124,7 +124,7 @@ function calcStickPos(coords,center,size){
 
 </script>
 
-<style>
+<style scoped>
 #touch-controller{
     background-color: #eee;
     width: 100%;
