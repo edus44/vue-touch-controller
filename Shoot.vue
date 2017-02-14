@@ -51,15 +51,12 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            steps:[.08,.22,.42,.66,1,2],
-            size:80,
-            center:{x:0,y:0},
-            stick:{x:0,y:0},
-            fire:{
-                x:0,
-                y:0,
-            },
-            bounds:null,
+            steps: [.08,.22,.42,.66,1,2],
+            size: 80,
+            center: {x: 0,y: 0},
+            stick: {x: 0,y: 0},
+            fire: {x: 0, y: 0},
+            bounds: null,
             holding: false,
         }
     },
@@ -88,9 +85,10 @@ export default {
             this.resetCenter()
         },
         resetCenter(){
-            let x = this.bounds.width/2
-            let y = this.bounds.height/2
-            this.center = {x,y}
+            this.center = {
+                x: this.bounds.width/2,
+                y: this.bounds.height/2
+            }
             this.stick = {x:0,y:0}
             this.holding = false
             this.emitPos()

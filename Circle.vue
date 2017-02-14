@@ -58,9 +58,10 @@ export default {
             this.resetCenter()
         },
         resetCenter(){
-            let x = this.bounds.width/2
-            let y = this.bounds.height/2
-            this.center = {x,y}
+            this.center = {
+                x: this.bounds.width/2,
+                y: this.bounds.height/2
+            }
             this.stick = {x:0,y:0}
             this.holding = false
             this.emitPos()
