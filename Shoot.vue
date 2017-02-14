@@ -5,48 +5,41 @@
         v-tapmove="moveStick"
         v-tapend="resetCenter"
     >
-    <defs>
-        <clipPath id="limits">
-            <circle 
-                :r="size*2" 
-                :cx="center.x" 
-                :cy="center.y"
-                fill="none"
-                stroke-width="10"
-            />
+        <clipPath id="frontier">
+            <circle :r="size*2" />
         </clipPath>
-    </defs>
-        <circle 
-            class="touch-controller-stick-limits"
-            v-for="n in steps"
-            :r="size * n" 
-            :cx="center.x" 
-            :cy="center.y" 
-        />
-        <line 
-            class="touch-controller-stick-line"
-            v-for="line in lines"
-            :x1="center.x" 
-            :y1="center.y" 
-            :x2="line.x" 
-            :y2="line.y"
-        />
-        <line 
-            class="touch-controller-stick-fire"
-            v-show="holding"
-            :x1="center.x" 
-            :y1="center.y" 
-            :x2="fire.x" 
-            :y2="fire.y"
-            clip-path="url(#limits)"
-        />
 
-        <circle 
-            class="touch-controller-stick-handler"
-            :r="size*.3" 
-            :cx="stick.x" 
-            :cy="stick.y" 
-        />
+        <g 
+            :transform="translateCenter" 
+            clip-path="url(#frontier)"
+        >
+            <circle 
+                class="touch-controller-stick-limits"
+                v-for="n in steps"
+                :r="size * n" 
+            />
+            <line 
+                class="touch-controller-stick-line"
+                v-for="line in lines"
+                :x1="line.x1" 
+                :y1="line.y1" 
+                :x2="line.x2" 
+                :y2="line.y2"
+            />
+            <line 
+                class="touch-controller-stick-fire"
+                v-show="holding"
+                :x2="fire.x" 
+                :y2="fire.y"
+            />
+
+            <circle 
+                class="touch-controller-stick-handler"
+                :r="size*.3" 
+                :cx="stick.x" 
+                :cy="stick.y" 
+            />
+        </svg>
     </svg>
 </template>
 
@@ -58,7 +51,6 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            lineMarks:[0,90,180,270],
             steps:[.1,.25,.5,.75,1,2],
             size:80,
             center:{x:0,y:0},
@@ -73,13 +65,14 @@ export default {
     },
     computed:{
         lines(){
-            return this.lineMarks.map(angle=>{
-                let rads = angle/180*Math.PI
-                return {
-                    x: this.center.x + this.size*2  * Math.cos(rads),
-                    y: this.center.y + this.size*2  * Math.sin(rads),
-                }
-            })
+            let d = this.size*2
+            return [
+                {x1:0, y1:-d, x2:0, y2:d},
+                {x1:-d, y1:0, x2:d, y2:0},
+            ]
+        },
+        translateCenter(){
+            return `translate(${this.center.x},${this.center.y})`
         }
     },
     mounted(){
@@ -98,12 +91,12 @@ export default {
             let x = this.bounds.width/2
             let y = this.bounds.height/2
             this.center = {x,y}
-            this.stick = {x,y}
+            this.stick = {x:0,y:0}
             this.holding = false
             this.emitPos()
         },
         setCenter(e){
-            this.center = this.stick = this.getXY(e)
+            this.center = this.getXY(e)
             this.holding = true
             this.emitPos()
         },
@@ -118,14 +111,14 @@ export default {
             this.emitPos(pos.x,pos.y)
 
             this.stick = {
-                x: this.center.x + pos.x * this.size,
-                y: this.center.y + pos.y * this.size
+                x: pos.x * this.size,
+                y: pos.y * this.size
             }
 
             //Fireline
             this.fire = {
-                x: this.center.x + pos.x * 10000,
-                y: this.center.y + pos.y * 10000
+                x: pos.x * 10000,
+                y: pos.y * 10000
             }
         },
         getXY(e){
@@ -189,11 +182,11 @@ function calcStickPos(coords,center,size){
 .touch-controller-stick-limits{
     fill:none;
     stroke:rgba(207, 33, 33, 1);
-    stroke-width:3;
+    stroke-width:2;
 }
 .touch-controller-stick-line{
     stroke:rgba(207, 33, 33, 1);
-    stroke-width:3;
+    stroke-width:2;
 }
 .touch-controller-stick-fire{
     stroke:rgb(255, 166, 8);
