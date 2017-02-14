@@ -36,8 +36,8 @@
             <circle 
                 class="touch-control-shot-stick-handler"
                 :r="size*.3" 
-                :cx="stick.x" 
-                :cy="stick.y" 
+                :cx="pos.x * size" 
+                :cy="pos.y * size" 
             />
         </svg>
     </svg>
@@ -45,19 +45,14 @@
 
 <script>
 
-import * as tapDirectives from 'tapDirectives'
+import circleMixin from './circleMixin'
 
 export default {
-    directives:tapDirectives,
+    mixins: [circleMixin], 
     data(){
         return {
             steps: [.08,.22,.42,.66,1,1.9],
-            size: 80,
-            center: {x: 0,y: 0},
-            stick: {x: 0,y: 0},
-            fire: {x: 0, y: 0},
-            bounds: null,
-            holding: false,
+            fire: {x: 0, y: 0}
         }
     },
     computed:{
@@ -67,101 +62,20 @@ export default {
                 {x1:0, y1:-d, x2:0, y2:d},
                 {x1:-d, y1:0, x2:d, y2:0},
             ]
-        },
-        translateCenter(){
-            return `translate(${this.center.x},${this.center.y})`
         }
-    },
-    mounted(){
-        this.onResize()
-        window.addEventListener('resize',this.onResize)
-    },
-    destroyed(){
-        window.removeEventListener('resize',this.onResize)
     },
     methods:{
-        onResize(){
-            this.bounds = this.$el.getBoundingClientRect()
-            this.resetCenter()
-        },
-        resetCenter(){
-            this.center = {
-                x: this.bounds.width/2,
-                y: this.bounds.height/2
-            }
-            this.stick = {x:0,y:0}
-            this.holding = false
-            this.emitPos()
-        },
         setCenter(e){
-            this.center = this.getXY(e)
             this.holding = true
-            this.emitPos()
+            this.moveStick(e)
         },
-        moveStick(e){
-            if (!this.holding)
-                return
-            let coords = this.getXY(e)
-
-            //Stick
-            let pos = calcStickPos(coords,this.center,this.size)
-
-            this.emitPos(pos.x,pos.y)
-
-            this.stick = {
-                x: pos.x * this.size,
-                y: pos.y * this.size
-            }
-
-            //Fireline
+        afterMoveStick(){
             this.fire = {
-                x: pos.x * 10000,
-                y: pos.y * 10000
+                x: this.pos.x * 10000,
+                y: this.pos.y * 10000
             }
-        },
-        getXY(e){
-            return {
-                x:e.pageX - this.bounds.left,
-                y:e.pageY - this.bounds.top
-            }
-        },
-        emitPos(x,y){
-            this.$emit('update',{
-                x:x || 0,
-                y:y || 0
-            })
         }
     }
-}
-
-function calcStickPos(coords,center,size){
-    let dX = (coords.x - center.x) / size
-    let dY = (coords.y - center.y) / size
-
-    //Distance to center
-    let module = Math.sqrt( (dX*dX) + (dY*dY) )
-
-
-    //Off limits
-    if (module>1){
-
-        //Angle
-        let angle = Math.atan(dY/dX)
-
-        //Intersect position
-        let limX = Math.cos(angle)
-        let limY = Math.sin(angle)
-
-        if (dX<0){
-            dX = -limX
-            dY = -limY
-        }else{
-            dX = limX
-            dY = limY
-        }
-    }
-
-    return {x:dX,y:dY} 
 }
 
 </script>
