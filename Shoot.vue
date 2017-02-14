@@ -5,22 +5,45 @@
         v-tapmove="moveStick"
         v-tapend="resetCenter"
     >
-
-        <circle 
-            class="touch-controller-stick-center"
-            :r="this.size*0.17" 
-            :cx="center.x" 
-            :cy="center.y" 
-        />
+    <defs>
+        <clipPath id="limits">
+            <circle 
+                :r="size*2" 
+                :cx="center.x" 
+                :cy="center.y"
+                fill="none"
+                stroke-width="10"
+            />
+        </clipPath>
+    </defs>
         <circle 
             class="touch-controller-stick-limits"
-            :r="this.size" 
+            v-for="n in steps"
+            :r="size * n" 
             :cx="center.x" 
             :cy="center.y" 
         />
+        <line 
+            class="touch-controller-stick-line"
+            v-for="line in lines"
+            :x1="center.x" 
+            :y1="center.y" 
+            :x2="line.x" 
+            :y2="line.y"
+        />
+        <line 
+            class="touch-controller-stick-fire"
+            v-show="holding"
+            :x1="center.x" 
+            :y1="center.y" 
+            :x2="fire.x" 
+            :y2="fire.y"
+            clip-path="url(#limits)"
+        />
+
         <circle 
             class="touch-controller-stick-handler"
-            :r="this.size*.3" 
+            :r="size*.3" 
             :cx="stick.x" 
             :cy="stick.y" 
         />
@@ -35,11 +58,28 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            size:120,
+            lineMarks:[0,90,180,270],
+            steps:[.1,.25,.5,.75,1,2],
+            size:80,
             center:{x:0,y:0},
             stick:{x:0,y:0},
+            fire:{
+                x:0,
+                y:0,
+            },
             bounds:null,
             holding: false,
+        }
+    },
+    computed:{
+        lines(){
+            return this.lineMarks.map(angle=>{
+                let rads = angle/180*Math.PI
+                return {
+                    x: this.center.x + this.size*2  * Math.cos(rads),
+                    y: this.center.y + this.size*2  * Math.sin(rads),
+                }
+            })
         }
     },
     mounted(){
@@ -71,11 +111,21 @@ export default {
             if (!this.holding)
                 return
             let coords = this.getXY(e)
-            let {dX,dY} = calcStickPos(coords,this.center,this.size)
-            this.emitPos(dX,dY)
+
+            //Stick
+            let pos = calcStickPos(coords,this.center,this.size)
+
+            this.emitPos(pos.x,pos.y)
+
             this.stick = {
-                x: this.center.x + dX * this.size,
-                y: this.center.y + dY * this.size
+                x: this.center.x + pos.x * this.size,
+                y: this.center.y + pos.y * this.size
+            }
+
+            //Fireline
+            this.fire = {
+                x: this.center.x + pos.x * 10000,
+                y: this.center.y + pos.y * 10000
             }
         },
         getXY(e){
@@ -84,10 +134,10 @@ export default {
                 y:e.pageY - this.bounds.top
             }
         },
-        emitPos(dX,dY){
-            this.$emit('pos',{
-                x:dX || 0,
-                y:dY || 0
+        emitPos(x,y){
+            this.$emit('update',{
+                x:x || 0,
+                y:y || 0
             })
         }
     }
@@ -99,6 +149,7 @@ function calcStickPos(coords,center,size){
 
     //Distance to center
     let module = Math.sqrt( (dX*dX) + (dY*dY) )
+
 
     //Off limits
     if (module>1){
@@ -119,12 +170,12 @@ function calcStickPos(coords,center,size){
         }
     }
 
-    return {dX,dY} 
+    return {x:dX,y:dY} 
 }
 
 </script>
 
-<style>
+<style scoped>
 #touch-controller{
     background-color: #eee;
     width: 100%;
@@ -133,12 +184,20 @@ function calcStickPos(coords,center,size){
 }
 
 .touch-controller-stick-center{
-    fill:#3273dc; 
+    fill:rgba(207, 33, 33, 1);
 }
 .touch-controller-stick-limits{
-    fill:rgba(50, 115, 220, 0.3);
-    stroke:#3273dc;
+    fill:none;
+    stroke:rgba(207, 33, 33, 1);
     stroke-width:3;
+}
+.touch-controller-stick-line{
+    stroke:rgba(207, 33, 33, 1);
+    stroke-width:3;
+}
+.touch-controller-stick-fire{
+    stroke:rgb(255, 166, 8);
+    stroke-width:4;
 }
 .touch-controller-stick-handler{
     fill:rgba(0,0,0,.6);

@@ -2,12 +2,14 @@
     <div id="box">
         {{ pos.x }}<br>
         {{ pos.y }}<br>
-        <TouchController @pos="updatePos"/>
+        <Shoot @update="updatePos"/>
+        <Circle2 @update="updatePos"/>
     </div>
 </template>
 
 <script>
-import TouchController from 'TouchController'
+import Shoot from 'Shoot'
+import Circle from 'Circle'
 
 export default {
     data(){
@@ -20,7 +22,7 @@ export default {
             this.pos = pos
         }
     },
-    components: {TouchController}
+    components: {Shoot,Circle2:Circle}
 }
 </script>
 

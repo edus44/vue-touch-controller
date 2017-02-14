@@ -1,5 +1,5 @@
 
-const isTouch = ('ontouchstart' in window)
+const isTouch = 'ontouchstart' in window
 
 function tapFactory(mouse,touch){
     return {
