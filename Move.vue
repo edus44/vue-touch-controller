@@ -114,7 +114,7 @@ function calcStickPos(coords,center,size){
         let limX = Math.cos(angle)
         let limY = Math.sin(angle)
 
-        if (dX<0){
+        if (dX<0 ){
             dX = -limX
             dY = -limY
         }else{
@@ -145,6 +145,6 @@ function calcStickPos(coords,center,size){
     stroke-width:3;
 }
 .touch-control-move-stick-handler{
-    fill:rgba(0,0,0,.6);
+    fill:rgba(255,255,255,.6);
 }
 </style>

@@ -51,7 +51,7 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            steps: [.08,.22,.42,.66,1,2],
+            steps: [.08,.22,.42,.66,1,1.9],
             size: 80,
             center: {x: 0,y: 0},
             stick: {x: 0,y: 0},
@@ -193,7 +193,7 @@ function calcStickPos(coords,center,size){
     animation: dash .2s linear infinite;
 }
 .touch-control-shot-stick-handler{
-    fill:rgba(0,0,0,.6);
+    fill:rgba(255,255,255,.6);
 }
 @keyframes dash {
   to {

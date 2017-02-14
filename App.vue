@@ -33,7 +33,7 @@ html,body{
     padding: 0;
     min-height: 100%;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #111;
 }
 body{
     cursor: default;
@@ -42,6 +42,11 @@ body{
 #box{
     flex:1;
     display: flex;
-}
+    flex-wrap:wrap;
 
+}
+#box>svg{
+    width: 50%;
+    /*height: 50%;*/
+}
 </style>
