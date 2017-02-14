@@ -51,7 +51,7 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            steps:[.1,.25,.5,.75,1,2],
+            steps:[.08,.22,.42,.66,1,2],
             size:80,
             center:{x:0,y:0},
             stick:{x:0,y:0},
