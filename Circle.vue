@@ -5,25 +5,23 @@
         v-tapmove="moveStick"
         v-tapend="resetCenter"
     >
-
-        <circle 
-            class="touch-controller-stick-center"
-            :r="this.size*0.17" 
-            :cx="center.x" 
-            :cy="center.y" 
-        />
-        <circle 
-            class="touch-controller-stick-limits"
-            :r="this.size" 
-            :cx="center.x" 
-            :cy="center.y" 
-        />
-        <circle 
-            class="touch-controller-stick-handler"
-            :r="this.size*.3" 
-            :cx="stick.x" 
-            :cy="stick.y" 
-        />
+        
+        <g :transform="translateCenter">
+            <circle 
+                class="touch-controller-stick-center"
+                :r="this.size*0.17" 
+            />
+            <circle 
+                class="touch-controller-stick-limits"
+                :r="this.size" 
+            />
+            <circle 
+                class="touch-controller-stick-handler"
+                :r="this.size*.3" 
+                :cx="stick.x" 
+                :cy="stick.y" 
+            />
+        </g>
     </svg>
 </template>
 
@@ -35,11 +33,16 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            size:80,
+            size:100,
             center:{x:0,y:0},
             stick:{x:0,y:0},
             bounds:null,
             holding: false,
+        }
+    },
+    computed:{
+        translateCenter(){
+            return `translate(${this.center.x},${this.center.y})`
         }
     },
     mounted(){
@@ -58,12 +61,12 @@ export default {
             let x = this.bounds.width/2
             let y = this.bounds.height/2
             this.center = {x,y}
-            this.stick = {x,y}
+            this.stick = {x:0,y:0}
             this.holding = false
             this.emitPos()
         },
         setCenter(e){
-            this.center = this.stick = this.getXY(e)
+            this.center = this.getXY(e)
             this.holding = true
             this.emitPos()
         },
@@ -74,8 +77,8 @@ export default {
             let {dX,dY} = calcStickPos(coords,this.center,this.size)
             this.emitPos(dX,dY)
             this.stick = {
-                x: this.center.x + dX * this.size,
-                y: this.center.y + dY * this.size
+                x: dX * this.size,
+                y: dY * this.size
             }
         },
         getXY(e){
