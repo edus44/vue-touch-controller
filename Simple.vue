@@ -67,6 +67,12 @@ export default {
         simplePos(){
             this.$emit('update-simple',this.simplePos)
         }
+    },
+    methods:{
+        setCenter(e){
+            this.holding = true
+            this.moveStick(e)
+        },
     }
 }
 
