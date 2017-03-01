@@ -39,7 +39,7 @@
                 :cx="pos.x * size" 
                 :cy="pos.y * size" 
             />
-        </svg>
+        </g>
     </svg>
 </template>
 

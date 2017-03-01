@@ -1,13 +1,15 @@
 <template>
     <div id="box">
         <Fullscreen/>
-        <Move @update="updatePos"/>
-        <Shoot @update="updatePos"/>
+        <!-- <Move @update="updatePos"/> -->
+        <Simple @update="updatePos"/>
+        <!-- <Shoot @update="updatePos"/> -->
     </div>
 </template>
 
 <script>
 import Shoot from 'Shoot'
+import Simple from 'Simple'
 import Move from 'Move'
 import Fullscreen from 'Fullscreen'
 
@@ -22,7 +24,7 @@ export default {
             this.pos = pos
         }
     },
-    components: {Shoot,Move,Fullscreen}
+    components: {Shoot,Move,Fullscreen,Simple}
 }
 </script>
 
