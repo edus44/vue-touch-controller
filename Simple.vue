@@ -65,7 +65,7 @@ export default {
     },
     watch:{
         simplePos(){
-            this.$emit('update',this.simplePos)
+            this.$emit('update-simple',this.simplePos)
         }
     }
 }
