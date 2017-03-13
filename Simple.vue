@@ -63,9 +63,15 @@ export default {
             return simplePos
         }
     },
+    created(){
+        this.lastEmit = {}
+    },
     watch:{
         simplePos(){
-            this.$emit('update-simple',this.simplePos)
+            if (this.lastEmit.x != this.simplePos.x || this.lastEmit.y != this.simplePos.y){
+                this.$emit('update-simple',this.simplePos)
+                this.lastEmit = {x:this.simplePos.x,y:this.simplePos.y}
+            }
         }
     },
     methods:{
